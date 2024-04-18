@@ -1,0 +1,14 @@
+# Expo
+.expo
+__generated__
+web-build
+
+# macOS
+.DS_Store
+
+# Node
+node_modules
+npm-debug.log
+yarn-error.log
+
+dist
