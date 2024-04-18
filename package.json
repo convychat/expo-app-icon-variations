@@ -1,5 +1,5 @@
 {
-  "name": "expo-app-icon-variations",
+  "name": "@convy/expo-app-icon-variations",
   "version": "1.0.0",
   "description": "Config plugin to adding app icon variations to iOS bundle",
   "main": "dist/index.js",
