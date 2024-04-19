@@ -1,6 +1,12 @@
 // heavily inspired by https://github.com/expo/expo/blob/934ce48bd4c152e99479e83451c0f4ed70a31d63/packages/%40expo/prebuild-config/src/plugins/icons/withIosIcons.ts
 // IT SHOULD BE COMPILED WITH TSC BEFORE RUNNING `expo prebuild` COMMAND
-import { ConfigPlugin, IOSConfig, withDangerousMod } from "@expo/config-plugins"
+import {
+  ConfigPlugin,
+  IOSConfig,
+  withDangerousMod,
+  withXcodeProject,
+  XcodeProject,
+} from "@expo/config-plugins"
 import { ExpoConfig } from "@expo/config-types"
 import { generateImageAsync } from "@expo/image-utils"
 import * as fs from "fs"
@@ -14,10 +20,16 @@ export const withIosIconsets: ConfigPlugin<string[]> = (
   config,
   fileNames: string[],
 ) => {
-  return withDangerousMod(config, [
+  const configWithParam = withXcodeProject(config, async (config) => {
+    addBuildParam(config.modResults)
+    return config
+  })
+
+  return withDangerousMod(configWithParam, [
     "ios",
     async (config) => {
       await setIconsAsync(config, config.modRequest.projectRoot, fileNames)
+
       return config
     },
   ])
@@ -25,7 +37,17 @@ export const withIosIconsets: ConfigPlugin<string[]> = (
 
 export default withIosIconsets
 
-export async function setIconsAsync(
+function addBuildParam(project: XcodeProject) {
+  const configurations = project.pbxXCBuildConfigurationSection()
+  // @ts-ignore
+  for (const { buildSettings } of Object.values(configurations ?? {})) {
+    if (buildSettings) {
+      buildSettings.ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = "YES"
+    }
+  }
+}
+
+async function setIconsAsync(
   config: ExpoConfig,
   projectRoot: string,
   fileNames: string[],

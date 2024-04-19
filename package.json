@@ -1,6 +1,6 @@
 {
   "name": "@convy/expo-app-icon-variations",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Config plugin to adding app icon variations to iOS bundle",
   "main": "dist/index.js",
   "sideEffects": false,
@@ -10,7 +10,8 @@
     "url": "https://github.com/convychat/expo-app-icon-variations.git"
   },
   "scripts": {
-    "build": "tsup src/index.ts"
+    "build": "tsup src/index.ts",
+    "prepublish": "npm run build"
   },
   "keywords": [
     "react",
